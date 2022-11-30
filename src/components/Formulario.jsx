@@ -1,12 +1,26 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import {db} from '../firebase'
-import { collection,doc, addDoc } from "firebase/firestore";
+import { collection,doc, addDoc, onSnapshot, query } from "firebase/firestore";
+import { async } from "@firebase/util";
 
 const Formulario = () =>{
 
     const [fruta, setFruta] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [listaFrutas, setListaFrutas] = useState([]);
+
+    useEffect(()=>{
+        const obtenerDatos = async()=>{
+            try{
+               await onSnapshot(collection(db,'frutas'), (query) =>{
+                    setListaFrutas(query.docs.map((doc) => ({...doc.data(), id:doc.id})))
+               }) 
+            }catch(error){
+               console.log(error)
+            }
+        }
+            obtenerDatos();
+    }, [])
 
     const guardarFrutas = async (e)=>{
         e.preventDefault();
@@ -15,6 +29,14 @@ const Formulario = () =>{
                nombreFruta: fruta,
                nombreDescripcion:descripcion 
             })
+            setListaFrutas(
+                [...listaFrutas, {nombreFruta: fruta,
+                    nombreDescripcion:descripcion,
+                    id: data.id
+                }]
+            )
+            setFruta('')
+            setDescripcion('')
         }catch(error){
             console.log(error)
         }
@@ -29,8 +51,11 @@ const Formulario = () =>{
                 <div className="col-8">
                     <h4 className="text-center">Listado de frutas</h4>
                     <ul className="list-group">
-                        <li className="list-group-item">Fruta 1</li>
-                        <li className="list-group-item">Fruta 2</li>
+                        {
+                            listaFrutas.map(item => (
+                                <li className="list-group-item" key={item.id}>{item.nombreFruta}-{item.nombreDescripcion}</li>
+                            ))
+                        }
                     </ul>
                 </div>
                 <div className="col-4">
