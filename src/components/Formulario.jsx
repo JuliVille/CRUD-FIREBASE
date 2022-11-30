@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react"
 import {db} from '../firebase'
-import { collection,doc, addDoc, onSnapshot, query } from "firebase/firestore";
+import { collection,doc, addDoc, onSnapshot, query, deleteDoc } from "firebase/firestore";
 import { async } from "@firebase/util";
 
 const Formulario = () =>{
@@ -22,6 +22,17 @@ const Formulario = () =>{
             obtenerDatos();
     }, [])
 
+    const eliminar = async id=>{
+        try {
+            await deleteDoc(doc(db, 'frutas', id))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const editar = item =>{
+        
+    }
     const guardarFrutas = async (e)=>{
         e.preventDefault();
         try{
@@ -53,7 +64,11 @@ const Formulario = () =>{
                     <ul className="list-group">
                         {
                             listaFrutas.map(item => (
-                                <li className="list-group-item" key={item.id}>{item.nombreFruta}-{item.nombreDescripcion}</li>
+                                <li className="list-group-item" key={item.id}>
+                                    <span className="lead">{item.nombreFruta}-{item.nombreDescripcion}</span>
+                                    <button className="btn btn-danger btn-sm fload-end mx-2" onClick={()=>eliminar(item.id)}>Eliminar</button>
+                                    <button className="btn btn-warning btn-sm fload-end mx-2" onClick={()=>editar(item.id)}>Editar</button>
+                                </li>
                             ))
                         }
                     </ul>
