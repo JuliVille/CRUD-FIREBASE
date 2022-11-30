@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react"
 import {db} from '../firebase'
-import { collection,doc, addDoc, onSnapshot, query, deleteDoc, updateDoc } from "firebase/firestore";
-import { async } from "@firebase/util";
+import { collection,doc, addDoc, onSnapshot, deleteDoc, updateDoc } from "firebase/firestore";
 
 const Formulario = () =>{
 
