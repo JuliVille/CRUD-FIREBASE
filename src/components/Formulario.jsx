@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react"
 import {db} from '../firebase'
 import { collection,doc, addDoc, onSnapshot, deleteDoc, updateDoc } from "firebase/firestore";
+import './crud.css';
 
 const Formulario = () =>{
 
@@ -139,61 +140,73 @@ const Formulario = () =>{
     }
 
     return (
-        <div className="container mt-5">
+        <div className="container mt-5" > 
             <h1 className="text-cent">CRUD DESARROLLO WEB I</h1>
             <hr/>
-            <div className="row">
-                <div className="col-8">
-                    <h4 className="text-center">Listado de Celulares</h4>
-                    <table class="table">
+            <div className="row" >
+            <div className="fondo col-2 mt-5"></div>
+                <div className=" col-7" >
+                    <h4 className="listado text-center mt-3" >Listado de Celulares</h4>
+                    <table className="table  table-hover table-sm table-bordered table-dark">
                         <thead>
                             <tr>
                             <th scope="col">Marca</th>
                             <th scope="col">Modelo</th>
                             <th scope="col">Precio</th>
-                            <th scope="col">Almacenamiento</th>
+                            <th scope="col">Almacena</th>
                             <th scope="col">Ram</th>
                             <th scope="col">Tamaño</th>
                             <th scope="col">Descripcion</th>
-                            <th></th>
-                            <th></th>
+                            <th colSpan="2">Accion</th>
                             </tr>
                         </thead>
                         <tbody>
                         {
                             listaCelulares.map(item => (
-                                <tr>
+                                <tr key={item.id}>
                                 <td>{item.marcaC}</td>
                                 <td>{item.modeloC}</td>
-                                <td>{item.precioC}</td>
-                                <td>{item.almacenamientoC}</td>
-                                <td>{item.ramC}</td>
-                                <td>{item.tamañoC}</td>
+                                <td><span>$</span>{item.precioC}</td>
+                                <td>{item.almacenamientoC}<span>gb</span></td>
+                                <td>{item.ramC}<span>GB</span></td>
+                                <td>{item.tamañoC}<span> pulgadas</span></td>
                                 <td>{item.descripcionC}</td>
-                                <td><button className="btn btn-danger btn-sm fload-end mx-2" onClick={()=>eliminar(item.id)}>Eliminar</button></td>
-                                <td><button className="btn btn-warning btn-sm fload-end" onClick={()=>editar(item)}>Editar</button></td>
+                                <td><button className="btn btn-danger btn-sm fload-end" onClick={()=>eliminar(item.id)}>Eliminar</button></td>
+                                <td><button className="btn btn-success btn-sm fload-end" onClick={()=>editar(item)}>Editar</button></td>
                                 </tr>
                             ))
                         }  
                         </tbody>
                     </table>
                 </div>
-                <div className="col-4">
+                <div className="col-3">
                     <h4 className="text-center">{modoEdicion ? 'Editar Celular': 'Agregar Celular'}</h4>
-                    <form onSubmit={modoEdicion ? editarCelular: guardarCelular}>
-                        <input type="text" className="form-control mb-2" placeholder="Ingrese Marca" value={marca} onChange={(e)=>setMarca(e.target.value)}/>
-                        <input type="text" className="form-control mb-2" placeholder="Ingrese Modelo" value={modelo} onChange={(e)=>setModelo(e.target.value)}/>
-                        <input type="text" className="form-control mb-2" placeholder="Ingrese Precio" value={precio} onChange={(e)=>setPrecio(e.target.value)}/>
-                        <input type="text" className="form-control mb-2" placeholder="Ingrese Almacenamiento" value={almacenamiento} onChange={(e)=>setAlmacenamiento(e.target.value)}/>
-                        <input type="text" className="form-control mb-2" placeholder="Ingrese Ram" value={ram} onChange={(e)=>setRam(e.target.value)}/>
-                        <input type="text" className="form-control mb-2" placeholder="Ingrese Tamaño" value={tamaño} onChange={(e)=>setTamaño(e.target.value)}/>
-                        <input type="text" className="form-control mb-2" placeholder="Ingrese descripcion" value={descripcion} onChange={(e)=>setDescripcion(e.target.value)}/>
+                    <form onSubmit={modoEdicion ? editarCelular: guardarCelular} className="row g-2">
+                        <div className="col-6 "><input type="text" className="form-control" placeholder="Ingrese Marca" value={marca} onChange={(e)=>setMarca(e.target.value)} required/></div>
+                        <div className="col-6"><input type="text" className="form-control" placeholder="Ingrese Modelo" value={modelo} onChange={(e)=>setModelo(e.target.value)} required/></div>                      
+                        <div className="input-group ">
+                            <span className="input-group-text">$</span>
+                            <input type="number" className="form-control" placeholder="Ingrese Precio" value={precio} onChange={(e)=>setPrecio(e.target.value)} required/>
+                        </div>
+                        <div className="input-group ">
+                            <input type="number" className="form-control" placeholder="Ingrese Almacenamiento" value={almacenamiento} onChange={(e)=>setAlmacenamiento(e.target.value)} required/>
+                            <span className="input-group-text" >gb</span >
+                        </div>
+                        <div className="input-group ">
+                            <input type="number" className="form-control" placeholder="Ingrese Ram" value={ram} onChange={(e)=>setRam(e.target.value)} required/>
+                            <span className="input-group-text" >GB</span >
+                        </div>
+                        <div className="input-group ">
+                            <input type="number" className="form-control" placeholder="Ingrese Tamaño" value={tamaño} onChange={(e)=>setTamaño(e.target.value)} required/>
+                            <span className="input-group-text" >pulgadas</span >
+                        </div>
+                        <div className="col-12"><textarea type="text" className="form-control" placeholder="Ingrese descripcion" value={descripcion} onChange={(e)=>setDescripcion(e.target.value)} required></textarea></div>
                         {
                             modoEdicion ?
                             (
                                 <>
-                                <button className="btn btn-primary btn-block" on="submit">Editar</button>
-                                <button className="btn btn-dark btn-block mx-2" onClick={()=>cancelar()}>Cancelar</button>
+                                <button className="btn btn-success btn-block" on="submit">Editar</button>
+                                <button className="btn btn-dark btn-block" onClick={()=>cancelar()}>Cancelar</button>
                                 </>
                             )
                             :
@@ -202,9 +215,14 @@ const Formulario = () =>{
                     </form>
                 </div>
             </div>
+            
         </div>
+        
     )
 }
 
 export default Formulario
 
+/*
+{<img src="https://picsum.photos/200/300" alt="" />}
+*/

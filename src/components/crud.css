@@ -1,0 +1,54 @@
+body{
+    background-image: linear-gradient(rgba(54, 54, 252, 0.5), rgba(114, 255, 75, 0.5));
+    background-size: 1000px 1000px;
+}
+
+.listado{
+    background-image: linear-gradient(rgba(54, 54, 252, 0.5), rgba(114, 255, 75, 0.5));
+}
+
+h1{
+    text-align: center;
+    color: white;
+}
+
+textarea{
+    height: 100px;
+}
+
+.col-3{
+    background-color: azure;
+    border-radius: 5%;
+    box-shadow: 10px 5px 5px rgb(82, 104, 104);
+}
+
+.col-3 h4{
+    color: black;
+    padding: 20px;
+    
+}
+
+.col-3 .btn-primary{
+    margin-bottom: 10px;
+}
+
+.col-3 .btn-dark{
+    margin-bottom: 10px;
+}
+
+.fondo{
+    background-image: url("https://picsum.photos/200/300");
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 5% 5%;
+}
+
+table tbody{
+    text-align: justify;
+    
+}
+
+table thead{
+    text-align: center;
+}
+
