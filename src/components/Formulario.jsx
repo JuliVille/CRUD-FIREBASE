@@ -4,17 +4,22 @@ import { collection,doc, addDoc, onSnapshot, deleteDoc, updateDoc } from "fireba
 
 const Formulario = () =>{
 
-    const [fruta, setFruta] = useState('');
+    const [marca, setMarca] = useState('');
+    const [modelo, setModelo] = useState('');
+    const [precio, setPrecio] = useState('');
+    const [almacenamiento, setAlmacenamiento] = useState('');
+    const [ram, setRam] = useState('');
+    const [tamaño, setTamaño] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [id, setId] = useState(0);
-    const [listaFrutas, setListaFrutas] = useState([]);
+    const [listaCelulares, setListaCelulares] = useState([]);
     const [modoEdicion, setModoEdicion] = useState(false);
 
     useEffect(()=>{
         const obtenerDatos = async()=>{
             try{
                await onSnapshot(collection(db,'frutas'), (query) =>{
-                    setListaFrutas(query.docs.map((doc) => ({...doc.data(), id:doc.id})))
+                    setListaCelulares(query.docs.map((doc) => ({...doc.data(), id:doc.id})))
                }) 
             }catch(error){
                console.log(error)
@@ -22,6 +27,42 @@ const Formulario = () =>{
         }
             obtenerDatos();
     }, [])
+
+    const guardarCelular = async (e)=>{
+        e.preventDefault();
+        try{
+            const data = await addDoc(collection(db,'frutas'),{
+               marcaC: marca,
+               modeloC:modelo, 
+               precioC: precio,
+               almacenamientoC:almacenamiento,
+               ramC: ram,
+               tamañoC:tamaño,
+               descripcionC:descripcion 
+            })
+            setListaCelulares(
+                [...listaCelulares, {
+                    marcaC: marca,
+                    modeloC:modelo, 
+                    precioC: precio,
+                    almacenamientoC:almacenamiento,
+                    ramC: ram,
+                    tamañoC:tamaño,
+                    descripcionC:descripcion,
+                    id: data.id
+                }]
+            )
+            setMarca('')
+            setModelo('')
+            setPrecio('')
+            setAlmacenamiento('')
+            setRam('')
+            setTamaño('')
+            setDescripcion('')
+        }catch(error){
+            console.log(error)
+        }
+    }
 
     const eliminar = async id=>{
         try {
@@ -32,27 +73,51 @@ const Formulario = () =>{
     }
 
     const editar = item =>{
-        setFruta(item.nombreFruta)
-        setDescripcion(item.nombreDescripcion)
+        setMarca(item.marcaC)
+        setModelo(item.modeloC)
+        setPrecio(item.precioC)
+        setAlmacenamiento(item.almacenamientoC)
+        setRam(item.ramC)
+        setTamaño(item.tamañoC)
+        setDescripcion(item.descripcionC)
         setId(item.id)
         setModoEdicion(true)
     }
 
-    const editarFrutas = async e =>{
+    const editarCelular = async e =>{
         e.preventDefault();
         try {
             const docRef = doc(db, 'frutas', id);
             await updateDoc(docRef,{
-                nombreFruta:fruta,
-                nombreDescripcion:descripcion
+                marcaC: marca,
+                modeloC:modelo, 
+                precioC: precio,
+                almacenamientoC:almacenamiento,
+                ramC: ram,
+                tamañoC:tamaño,
+                descripcionC:descripcion,
             })
 
-            const nuevoArray = listaFrutas.map(
-                item => item.id === id ? {id:id, nombreFruta:fruta, nombreDescripcion:descripcion}: item
+            const nuevoArray = listaCelulares.map(
+                item => item.id === id ? {
+                    id:id, 
+                    marcaC: marca,
+                    modeloC:modelo, 
+                    precioC: precio,
+                    almacenamientoC:almacenamiento,
+                    ramC: ram,
+                    tamañoC:tamaño,
+                    descripcionC:descripcion,
+                }: item
             )
 
-            setListaFrutas(nuevoArray)
-            setFruta('')
+            setListaCelulares(nuevoArray)
+            setMarca('')
+            setModelo('')
+            setPrecio('')
+            setAlmacenamiento('')
+            setRam('')
+            setTamaño('')
             setDescripcion('')
             setId('')
             setModoEdicion(false)
@@ -63,30 +128,14 @@ const Formulario = () =>{
 
     const cancelar = () =>{
         setModoEdicion(false)
-        setFruta('')
+        setMarca('')
+        setModelo('')
+        setPrecio('')
+        setAlmacenamiento('')
+        setRam('')
+        setTamaño('')
         setDescripcion('')
         setId('')
-    }
-
-    const guardarFrutas = async (e)=>{
-        e.preventDefault();
-        try{
-            const data = await addDoc(collection(db,'frutas'),{
-               nombreFruta: fruta,
-               nombreDescripcion:descripcion 
-            })
-            setListaFrutas(
-                [...listaFrutas, {nombreFruta: fruta,
-                    nombreDescripcion:descripcion,
-                    id: data.id
-                }]
-            )
-            setFruta('')
-            setDescripcion('')
-        }catch(error){
-            console.log(error)
-        }
-
     }
 
     return (
@@ -95,30 +144,50 @@ const Formulario = () =>{
             <hr/>
             <div className="row">
                 <div className="col-8">
-                    <h4 className="text-center">Listado de frutas</h4>
-                    <ul className="list-group">
+                    <h4 className="text-center">Listado de Celulares</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">Marca</th>
+                            <th scope="col">Modelo</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Almacenamiento</th>
+                            <th scope="col">Ram</th>
+                            <th scope="col">Tamaño</th>
+                            <th scope="col">Descripcion</th>
+                            <th></th>
+                            <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         {
-                            listaFrutas.map(item => (
-                                <li className="list-group-item" key={item.id}>
-                                    <span className="lead">{item.nombreFruta}-{item.nombreDescripcion}</span>
-                                    <button className="btn btn-danger btn-sm fload-end mx-2" onClick={()=>eliminar(item.id)}>Eliminar</button>
-                                    <button className="btn btn-warning btn-sm fload-end" onClick={()=>editar(item)}>Editar</button>
-                                </li>
+                            listaCelulares.map(item => (
+                                <tr>
+                                <td>{item.marcaC}</td>
+                                <td>{item.modeloC}</td>
+                                <td>{item.precioC}</td>
+                                <td>{item.almacenamientoC}</td>
+                                <td>{item.ramC}</td>
+                                <td>{item.tamañoC}</td>
+                                <td>{item.descripcionC}</td>
+                                <td><button className="btn btn-danger btn-sm fload-end mx-2" onClick={()=>eliminar(item.id)}>Eliminar</button></td>
+                                <td><button className="btn btn-warning btn-sm fload-end" onClick={()=>editar(item)}>Editar</button></td>
+                                </tr>
                             ))
-                        }
-                    </ul>
+                        }  
+                        </tbody>
+                    </table>
                 </div>
                 <div className="col-4">
-                    <h4 className="text-center">{modoEdicion ? 'Editar Frutas': 'Agregar Frutas'}</h4>
-                    <form onSubmit={modoEdicion ? editarFrutas: guardarFrutas}>
-                        <input type="text" className="form-control mb-2" 
-                        placeholder="Ingrese fruta" 
-                        value={fruta} 
-                        onChange={(e)=>setFruta(e.target.value)}/>
-                        <input type="text" className="form-control mb-2" 
-                        placeholder="Ingrese descripcion" 
-                        value={descripcion} 
-                        onChange={(e)=>setDescripcion(e.target.value)}/>
+                    <h4 className="text-center">{modoEdicion ? 'Editar Celular': 'Agregar Celular'}</h4>
+                    <form onSubmit={modoEdicion ? editarCelular: guardarCelular}>
+                        <input type="text" className="form-control mb-2" placeholder="Ingrese Marca" value={marca} onChange={(e)=>setMarca(e.target.value)}/>
+                        <input type="text" className="form-control mb-2" placeholder="Ingrese Modelo" value={modelo} onChange={(e)=>setModelo(e.target.value)}/>
+                        <input type="text" className="form-control mb-2" placeholder="Ingrese Precio" value={precio} onChange={(e)=>setPrecio(e.target.value)}/>
+                        <input type="text" className="form-control mb-2" placeholder="Ingrese Almacenamiento" value={almacenamiento} onChange={(e)=>setAlmacenamiento(e.target.value)}/>
+                        <input type="text" className="form-control mb-2" placeholder="Ingrese Ram" value={ram} onChange={(e)=>setRam(e.target.value)}/>
+                        <input type="text" className="form-control mb-2" placeholder="Ingrese Tamaño" value={tamaño} onChange={(e)=>setTamaño(e.target.value)}/>
+                        <input type="text" className="form-control mb-2" placeholder="Ingrese descripcion" value={descripcion} onChange={(e)=>setDescripcion(e.target.value)}/>
                         {
                             modoEdicion ?
                             (
@@ -138,3 +207,4 @@ const Formulario = () =>{
 }
 
 export default Formulario
+
