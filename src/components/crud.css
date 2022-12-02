@@ -5,11 +5,12 @@ body{
 
 .listado{
     background-image: linear-gradient(rgba(54, 54, 252, 0.5), rgba(114, 255, 75, 0.5));
+    font-weight: bold;
 }
 
 h1{
     text-align: center;
-    color: white;
+    color: azure
 }
 
 textarea{
@@ -36,19 +37,33 @@ textarea{
     margin-bottom: 10px;
 }
 
-.fondo{
-    background-image: url("https://picsum.photos/200/300");
+
+td img{
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
     border-radius: 5% 5%;
+    width: 100%;
+    height: 100px;
+}
+
+.registroF{
+    margin-top: 50px;
+    max-height: 480px;
 }
 
 table tbody{
-    text-align: justify;
-    
+    text-align: center;
 }
+
 
 table thead{
     text-align: center;
 }
 
+td{
+    max-width: 80%;
+}
+
+.size{
+    width: 30%;
+}

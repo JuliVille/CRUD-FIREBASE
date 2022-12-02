@@ -12,9 +12,11 @@ const Formulario = () =>{
     const [ram, setRam] = useState('');
     const [tamaño, setTamaño] = useState('');
     const [descripcion, setDescripcion] = useState('');
+    let   [imagen, setImagen] = useState('');
     const [id, setId] = useState(0);
     const [listaCelulares, setListaCelulares] = useState([]);
     const [modoEdicion, setModoEdicion] = useState(false);
+    
 
     useEffect(()=>{
         const obtenerDatos = async()=>{
@@ -39,7 +41,8 @@ const Formulario = () =>{
                almacenamientoC:almacenamiento,
                ramC: ram,
                tamañoC:tamaño,
-               descripcionC:descripcion 
+               descripcionC:descripcion ,
+               imagenC: imagen=`https://picsum.photos/id/${getRandomInt(100)}/200/300`
             })
             setListaCelulares(
                 [...listaCelulares, {
@@ -50,6 +53,7 @@ const Formulario = () =>{
                     ramC: ram,
                     tamañoC:tamaño,
                     descripcionC:descripcion,
+                    imagenC:  imagen=`https://picsum.photos/id/${getRandomInt(100)}/200/300`,
                     id: data.id
                 }]
             )
@@ -81,6 +85,7 @@ const Formulario = () =>{
         setRam(item.ramC)
         setTamaño(item.tamañoC)
         setDescripcion(item.descripcionC)
+        setImagen(item.imagenC)
         setId(item.id)
         setModoEdicion(true)
     }
@@ -97,6 +102,7 @@ const Formulario = () =>{
                 ramC: ram,
                 tamañoC:tamaño,
                 descripcionC:descripcion,
+                imagenC:  imagen,
             })
 
             const nuevoArray = listaCelulares.map(
@@ -109,6 +115,7 @@ const Formulario = () =>{
                     ramC: ram,
                     tamañoC:tamaño,
                     descripcionC:descripcion,
+                    imagenC:  imagen
                 }: item
             )
 
@@ -139,13 +146,16 @@ const Formulario = () =>{
         setId('')
     }
 
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+
     return (
         <div className="container mt-5" > 
             <h1 className="text-cent">CRUD DESARROLLO WEB I</h1>
             <hr/>
             <div className="row" >
-            <div className="fondo col-2 mt-5"></div>
-                <div className=" col-7" >
+                <div className="col-9" >
                     <h4 className="listado text-center mt-3" >Listado de Celulares</h4>
                     <table className="table  table-hover table-sm table-bordered table-dark">
                         <thead>
@@ -156,14 +166,15 @@ const Formulario = () =>{
                             <th scope="col">Almacena</th>
                             <th scope="col">Ram</th>
                             <th scope="col">Tamaño</th>
-                            <th scope="col">Descripcion</th>
+                            <th scope="col size">Descripcion</th>
+                            <th scope="col">Imagen</th>
                             <th colSpan="2">Accion</th>
                             </tr>
                         </thead>
                         <tbody>
                         {
                             listaCelulares.map(item => (
-                                <tr key={item.id}>
+                                <tr>
                                 <td>{item.marcaC}</td>
                                 <td>{item.modeloC}</td>
                                 <td><span>$</span>{item.precioC}</td>
@@ -171,6 +182,7 @@ const Formulario = () =>{
                                 <td>{item.ramC}<span>GB</span></td>
                                 <td>{item.tamañoC}<span> pulgadas</span></td>
                                 <td>{item.descripcionC}</td>
+                                <td><img src={item.imagenC} alt="" /></td>
                                 <td><button className="btn btn-danger btn-sm fload-end" onClick={()=>eliminar(item.id)}>Eliminar</button></td>
                                 <td><button className="btn btn-success btn-sm fload-end" onClick={()=>editar(item)}>Editar</button></td>
                                 </tr>
@@ -179,7 +191,7 @@ const Formulario = () =>{
                         </tbody>
                     </table>
                 </div>
-                <div className="col-3">
+                <div className="registroF col-3">
                     <h4 className="text-center">{modoEdicion ? 'Editar Celular': 'Agregar Celular'}</h4>
                     <form onSubmit={modoEdicion ? editarCelular: guardarCelular} className="row g-2">
                         <div className="col-6 "><input type="text" className="form-control" placeholder="Ingrese Marca" value={marca} onChange={(e)=>setMarca(e.target.value)} required/></div>
@@ -222,7 +234,3 @@ const Formulario = () =>{
 }
 
 export default Formulario
-
-/*
-{<img src="https://picsum.photos/200/300" alt="" />}
-*/
